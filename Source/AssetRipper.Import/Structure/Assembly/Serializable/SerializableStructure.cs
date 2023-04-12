@@ -7,6 +7,7 @@ using AssetRipper.Import.Logging;
 using AssetRipper.Import.Structure.Assembly.Mono;
 using AssetRipper.IO.Endian;
 using AssetRipper.IO.Files.SerializedFiles;
+using AssetRipper.SourceGenerated.Classes.ClassID_114;
 using AssetRipper.Yaml;
 
 namespace AssetRipper.Import.Structure.Assembly.Serializable
@@ -106,19 +107,24 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 			return true;
 		}
 
-		public bool TryRead(ref EndianSpanReader reader, UnityVersion version, TransferInstructionFlags flags)
+		public bool TryRead(ref EndianSpanReader reader, IMonoBehaviour monoBehaviour)
 		{
+			UnityVersion version = monoBehaviour.Collection.Version;
+			TransferInstructionFlags flags = monoBehaviour.Collection.Flags;
+
 			try
 			{
 				Read(ref reader, version, flags);
 			}
 			catch (Exception ex)
 			{
+				Logger.Error(LogCategory.Import, $"Unable to read MonoBehaviour Structure, ({monoBehaviour.NameString}).");
 				LogMonoBehaviorReadException(this, ex);
 				return false;
 			}
 			if (reader.Position != reader.Length)
 			{
+				Logger.Error(LogCategory.Import, $"Unable to read MonoBehaviour Structure, ({monoBehaviour.NameString}).");
 				LogMonoBehaviourMismatch(this, reader.Position, reader.Length);
 				return false;
 			}

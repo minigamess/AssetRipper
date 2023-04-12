@@ -135,6 +135,7 @@ namespace AssetRipper.Export.UnityProjects
 				}
 				yield return new PrefabProcessor();
 				yield return new SpriteProcessor();
+				yield return new SpineProcessor();
 			}
 		}
 

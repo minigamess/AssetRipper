@@ -37,14 +37,19 @@ namespace AssetRipper.Export.UnityProjects.Project.Collections
 			}
 			else
 			{
-				string subFolder = Path.Combine(AssetsKeyword, Asset.ClassName);
+				string subFolder = Asset.OriginalDirectory ?? Path.Combine(AssetsKeyword, Asset.ClassName);
 				subPath = Path.Combine(projectDirectory, subFolder);
 				fileName = GetUniqueFileName(container.File, Asset, subPath);
 			}
 
 			Directory.CreateDirectory(subPath);
-
 			string filePath = Path.Combine(subPath, fileName);
+
+			if (System.IO.File.Exists(filePath))
+			{
+				throw new Exception($"{filePath} {Asset.GUID} 已经存在");
+			}
+			
 			bool result = ExportInner(container, filePath, projectDirectory);
 			if (result)
 			{

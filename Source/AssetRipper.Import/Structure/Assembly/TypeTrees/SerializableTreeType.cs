@@ -49,7 +49,7 @@ namespace AssetRipper.Import.Structure.Assembly.TypeTrees
 				serializableTreeType = new SerializableTreeType(node.Name, primitiveType);
 			}
 
-			fields.Add(new Field(serializableTreeType, arrayDepth, node.Name));
+			fields.Add(new Field(serializableTreeType, arrayDepth, node.Name, node));
 		}
 
 		private static SerializableTreeType FromComplexNode(string name, TypeTreeNodeStruct node)

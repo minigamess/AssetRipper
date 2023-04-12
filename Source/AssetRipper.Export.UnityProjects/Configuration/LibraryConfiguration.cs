@@ -50,10 +50,11 @@ namespace AssetRipper.Export.UnityProjects.Configuration
 			AudioExportFormat = AudioExportFormat.Default;
 			ImageExportFormat = ImageExportFormat.Png;
 			MeshExportFormat = MeshExportFormat.Native;
-			ScriptExportMode = ScriptExportMode.Decompiled;
+			ScriptExportMode = ScriptExportMode.DllExportWithoutRenaming;
 			ScriptLanguageVersion = ScriptLanguageVersion.AutoSafe;
 			ShaderExportMode = ShaderExportMode.Dummy;
 			SpriteExportMode = SpriteExportMode.Yaml;
+			SpriteExportMode = SpriteExportMode.Texture2D;
 			TerrainExportMode = TerrainExportMode.Yaml;
 			TextExportMode = TextExportMode.Parse;
 			EnablePrefabOutlining = false;

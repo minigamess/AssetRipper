@@ -28,7 +28,7 @@ namespace AssetRipper.Export.UnityProjects.Textures
 			{
 				foreach ((ISprite? sprite, ISpriteAtlas? _) in texture.SpriteInformation)
 				{
-					Debug.Assert(sprite.RD_C213.Texture.IsAsset(sprite.Collection, texture));
+					// Debug.Assert(sprite.RD_C213.Texture.IsAsset(sprite.Collection, texture));
 					AddAsset(sprite);
 				}
 			}

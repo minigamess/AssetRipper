@@ -26,6 +26,11 @@ public readonly record struct PPtr<T>(int FileID, long PathID) where T : IUnityO
 	/// </summary>
 	public bool IsNull => PathID == 0;
 
+	public override string ToString()
+	{
+		return $"FileID: {FileID}, PathID: {PathID}";
+	}
+
 	public static implicit operator PPtr(PPtr<T> pptr) => new PPtr(pptr.FileID, pptr.PathID);
 	public static explicit operator PPtr<T>(PPtr pptr) => new PPtr<T>(pptr.FileID, pptr.PathID);
 	public static implicit operator PPtr<IUnityObjectBase>(PPtr<T> pptr) => new PPtr<IUnityObjectBase>(pptr.FileID, pptr.PathID);

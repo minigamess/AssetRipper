@@ -51,7 +51,7 @@ internal sealed class UnloadedStructure : UnityAssetBase
 		if (structure is not null)
 		{
 			EndianSpanReader reader = new EndianSpanReader(structureData, monoBehaviour.Collection.EndianType);
-			if (structure.TryRead(ref reader, monoBehaviour.Collection.Version, monoBehaviour.Collection.Flags))
+			if (structure.TryRead(ref reader, monoBehaviour))
 			{
 				monoBehaviour.Structure = structure;
 				return structure;

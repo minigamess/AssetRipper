@@ -5,6 +5,8 @@ using AssetRipper.Assets.Export.Yaml;
 using AssetRipper.Assets.Metadata;
 using AssetRipper.IO.Files;
 using AssetRipper.Yaml;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AssetRipper.Assets;
 
@@ -16,6 +18,9 @@ public abstract class UnityObjectBase : UnityAssetBase, IUnityObjectBase
 	protected UnityObjectBase(AssetInfo assetInfo)
 	{
 		AssetInfo = assetInfo;
+		using MD5 md5 = MD5.Create();
+		GUID = new UnityGUID(md5.ComputeHash(Encoding.UTF8.GetBytes($"{assetInfo.Collection.Name}{assetInfo.PathID}")));
+		// GUID = UnityGUID.NewGuid();
 	}
 
 	private OriginalPathDetails? originalPathDetails;
@@ -24,7 +29,7 @@ public abstract class UnityObjectBase : UnityAssetBase, IUnityObjectBase
 	public int ClassID => AssetInfo.ClassID;
 	public long PathID => AssetInfo.PathID;
 	public virtual string ClassName => GetType().Name;
-	public UnityGUID GUID { get; } = UnityGUID.NewGuid();
+	public UnityGUID GUID { get; }
 	public IUnityObjectBase? MainAsset { get; set; }
 
 	public YamlDocument ExportYamlDocument(IExportContainer container)

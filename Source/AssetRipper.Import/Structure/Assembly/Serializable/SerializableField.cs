@@ -31,7 +31,12 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 					{
 						PValue = reader.ReadBoolean() ? 1U : 0U;
 					}
-					reader.Align();
+
+					if (etalon.AlignBytes)
+					{
+						reader.Align();
+					}
+
 					break;
 
 				case PrimitiveType.Char:
@@ -43,7 +48,10 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 					{
 						PValue = reader.ReadChar();
 					}
-					reader.Align();
+					if (etalon.AlignBytes)
+					{
+						reader.Align();
+					}
 					break;
 
 				case PrimitiveType.SByte:
@@ -55,7 +63,10 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 					{
 						PValue = unchecked((byte)reader.ReadSByte());
 					}
-					reader.Align();
+					if (etalon.AlignBytes)
+					{
+						reader.Align();
+					}
 					break;
 
 				case PrimitiveType.Byte:
@@ -67,7 +78,10 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 					{
 						PValue = reader.ReadByte();
 					}
-					reader.Align();
+					if (etalon.AlignBytes)
+					{
+						reader.Align();
+					}
 					break;
 
 				case PrimitiveType.Short:
@@ -79,7 +93,10 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 					{
 						PValue = unchecked((ushort)reader.ReadInt16());
 					}
-					reader.Align();
+					if (etalon.AlignBytes)
+					{
+						reader.Align();
+					}
 					break;
 
 				case PrimitiveType.UShort:
@@ -91,7 +108,10 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 					{
 						PValue = reader.ReadUInt16();
 					}
-					reader.Align();
+					if (etalon.AlignBytes)
+					{
+						reader.Align();
+					}
 					break;
 
 				case PrimitiveType.Int:
@@ -504,6 +524,14 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 				if (etalon.IsArray)
 				{
 					IAsset[] structures = (IAsset[])CValue;
+					foreach (IAsset structure in structures)
+					{
+						// ReSharper disable once SuspiciousTypeConversion.Global
+						if (structure is IPPtr ptr)
+						{
+							yield return new PPtr<IUnityObjectBase>(ptr.FileID, ptr.PathID);
+						}
+					}
 					if (structures.Length > 0 && structures[0] is IDependent)
 					{
 						foreach (PPtr<IUnityObjectBase> asset in context.FetchDependenciesFromArray(structures.Cast<IDependent>(), etalon.Name))
@@ -515,6 +543,11 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 				else
 				{
 					IAsset structure = (IAsset)CValue;
+					// ReSharper disable once SuspiciousTypeConversion.Global
+					if (structure is IPPtr ptr)
+					{
+						yield return new PPtr<IUnityObjectBase>(ptr.FileID, ptr.PathID);
+					}
 					if (structure is IDependent dependent)
 					{
 						foreach (PPtr<IUnityObjectBase> asset in context.FetchDependenciesFromDependent(dependent, etalon.Name))

@@ -86,6 +86,25 @@ namespace AssetRipper.Export.UnityProjects.Scripts
 					}
 				}
 			}
+			
+			UnityGUID ComputeScriptDllGuid(IMonoScript script)
+			{
+				//The assembly file name without any extension.
+				ReadOnlySpan<byte> assemblyName = Encoding.UTF8.GetBytes(script.GetAssemblyNameFixed());
+				return UnityGUID.Md5Hash(assemblyName, Array.Empty<byte>(), Array.Empty<byte>());
+			}
+			
+			if (MonoScriptExtensions.HasNamespace(script.Collection.Version))
+			{
+				int fileID = ComputeScriptFileID(script.Namespace_C115.String, script.ClassName_C115.String);
+				return new MetaPtr(fileID, ComputeScriptDllGuid(script), AssetExporter.ToExportType(asset));
+			}
+			else
+			{
+				ScriptIdentifier scriptInfo = script.GetScriptID(AssetExporter.AssemblyManager);
+				int fileID = ComputeScriptFileID(scriptInfo.Namespace, scriptInfo.Name);
+				return new MetaPtr(fileID, ComputeScriptDllGuid(script), AssetExporter.ToExportType(asset));
+			}
 
 			long exportID = GetExportID(asset);
 			UnityGUID uniqueGUID = ComputeScriptGuid(script);

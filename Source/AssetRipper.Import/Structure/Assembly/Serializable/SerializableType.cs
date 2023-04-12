@@ -1,5 +1,6 @@
 using AssetRipper.Assets.IO;
 using AssetRipper.Import.Structure.Assembly.Mono;
+using AssetRipper.IO.Files.SerializedFiles.Parser.TypeTrees;
 using AssetRipper.SourceGenerated.Subclasses.PPtr_Object;
 
 namespace AssetRipper.Import.Structure.Assembly.Serializable
@@ -8,11 +9,13 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 	{
 		public readonly struct Field
 		{
-			public Field(SerializableType type, int arrayDepth, string name)
+			public readonly TypeTreeNodeStruct? TypeTree;
+			public Field(SerializableType type, int arrayDepth, string name, TypeTreeNodeStruct? typeTree = null)
 			{
 				Type = type;
 				ArrayDepth = arrayDepth;
 				Name = name;
+				TypeTree = typeTree;
 			}
 
 			public override string? ToString()
@@ -29,6 +32,8 @@ namespace AssetRipper.Import.Structure.Assembly.Serializable
 			public int ArrayDepth { get; }
 			public bool IsArray => ArrayDepth > 0;
 			public string Name { get; }
+
+			public bool AlignBytes => !TypeTree.HasValue || TypeTree.Value.AlignBytes;
 		}
 
 		protected SerializableType(string @namespace, PrimitiveType type, string name)
