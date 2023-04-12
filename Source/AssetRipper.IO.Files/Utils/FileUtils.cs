@@ -65,7 +65,7 @@ namespace AssetRipper.IO.Files.Utils
 
 			for (int counter = initial; counter < int.MaxValue; counter++)
 			{
-				string proposedName = $"{name}_{counter}{ext}";
+				string proposedName = $"{name}_dup_{counter}{ext}";
 				if (!File.Exists(Path.Combine(dirPath, proposedName)))
 				{
 					UniqueNamesByInitialPath[key] = counter;
