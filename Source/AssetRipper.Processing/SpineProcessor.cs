@@ -12,12 +12,32 @@ namespace AssetRipper.Processing
 {
 	public class SpineProcessor : IAssetProcessor
 	{
+		public bool IsSkeletonDataAsset(IUnityObjectBase asset)
+		{
+			if (asset is not IMonoBehaviour monoBehaviour)
+			{
+				return false;
+			}
+
+			IMonoScript? script = monoBehaviour.Script_C114P;
+
+			if (script?.Name_C115 != "SkeletonDataAsset" || script?.Namespace_C115 != "Spine.Unity")
+			{
+				return false;
+			}
+
+			return true;
+		}
 		public void Process(GameBundle gameBundle, UnityVersion projectVersion)
 		{
 			List<string> assetNames = new();
 			
 			foreach (IUnityObjectBase asset in gameBundle.FetchAssets())
 			{
+				if (!IsSkeletonDataAsset(asset))
+				{
+					continue;
+				}
 				if (asset.OriginalDirectory == null)
 				{
 					string assetName = GetAssetName(asset);
@@ -27,14 +47,7 @@ namespace AssetRipper.Processing
 
 			foreach (IUnityObjectBase asset in gameBundle.FetchAssets())
 			{
-				if (asset is not IMonoBehaviour monoBehaviour)
-				{
-					continue;
-				}
-
-				IMonoScript? script = monoBehaviour.Script_C114P;
-
-				if (script?.Name_C115 != "SkeletonDataAsset" || script?.Namespace_C115 != "Spine.Unity")
+				if (!IsSkeletonDataAsset(asset))
 				{
 					continue;
 				}
@@ -44,11 +57,11 @@ namespace AssetRipper.Processing
 				string assetName = GetAssetName(asset);
 				if (assetNames.Count(n => n == assetName) > 1)
 				{
-					asset.OriginalDirectory ??= $"SpineRes/{assetName}_g_{asset.GUID}";
+					asset.OriginalDirectory ??= $"Assets/SpineRes/{assetName}_g_{asset.GUID}";
 				}
 				else
 				{
-					asset.OriginalDirectory = "SpineRes";
+					asset.OriginalDirectory ??= "Assets/SpineRes";
 				}
 
 				foreach (PPtr<IUnityObjectBase> ptr in FetchDependencies(asset, dependencyContext))
