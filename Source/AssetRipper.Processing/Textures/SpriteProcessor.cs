@@ -86,7 +86,7 @@ namespace AssetRipper.Processing.Textures
 							sliceTexture2D.CopyValues(texture2D);
 							
 							sliceTexture2D.NameString = sprite.NameString;
-							sliceTexture2D.OriginalDirectory = "Assets/SpriteSlice/" + spriteAtlas.NameString;
+							sliceTexture2D.OriginalDirectory = "Assets/#0_SpriteSlice/" + spriteAtlas.NameString;
 							sliceTexture2D.OriginalName = sprite.NameString;
 							
 							sliceTexture2D.SpriteInformation = new ();

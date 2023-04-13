@@ -45,6 +45,12 @@ namespace AssetRipper.Export.UnityProjects.Project.Collections
 			Directory.CreateDirectory(subPath);
 			string filePath = Path.Combine(subPath, fileName);
 
+			string dir = Path.GetDirectoryName(filePath)!;
+			if (!Directory.Exists(dir))
+			{
+				Directory.CreateDirectory(dir);
+			}
+
 			if (System.IO.File.Exists(filePath))
 			{
 				throw new Exception($"{filePath} {Asset.GUID} 已经存在");

@@ -201,6 +201,7 @@ namespace AssetRipper.Export.UnityProjects
 				yield return new TypeTreeExporter();
 				yield return new DllPostExporter();
 				yield return new PathIdMapExporter();
+				yield return new ResourceDistinct();
 			}
 		}
 
