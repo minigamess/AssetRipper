@@ -123,6 +123,7 @@ namespace AssetRipper.Export.UnityProjects.Scripts
 			List<string> resFiles = new();
 
 			resFiles.AddRange(Directory.GetFiles(root, "*.asset", SearchOption.AllDirectories));
+			resFiles.AddRange(Directory.GetFiles(root, "*.mat", SearchOption.AllDirectories));
 			resFiles.AddRange(Directory.GetFiles(root, "*.anim", SearchOption.AllDirectories));
 			resFiles.AddRange(Directory.GetFiles(root, "*.controller", SearchOption.AllDirectories));
 			resFiles.AddRange(Directory.GetFiles(root, "*.spriteatlas", SearchOption.AllDirectories));
