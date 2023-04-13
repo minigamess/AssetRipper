@@ -87,6 +87,10 @@ namespace AssetRipper.Export.UnityProjects.Project
 
 		public MetaPtr CreateExportPointer(IUnityObjectBase asset)
 		{
+			if (asset is UnityObjectBase { ReplaceAsset: { } } obj)
+			{
+				asset = obj.ReplaceAsset;
+			}
 			if (m_assetCollections.TryGetValue(asset.AssetInfo, out IExportCollection? collection))
 			{
 				return collection.CreateExportPointer(asset, collection == CurrentCollection);

@@ -27,6 +27,8 @@ public abstract class UnityObjectBase : UnityAssetBase, IUnityObjectBase
 	public UnityGUID GUID { get; } = UnityGUID.NewGuid();
 	public IUnityObjectBase? MainAsset { get; set; }
 
+	public IUnityObjectBase? ReplaceAsset { get; set; }
+
 	public YamlDocument ExportYamlDocument(IExportContainer container)
 	{
 		YamlDocument document = new();

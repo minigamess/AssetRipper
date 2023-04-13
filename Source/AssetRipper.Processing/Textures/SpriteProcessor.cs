@@ -10,6 +10,7 @@ using AssetRipper.SourceGenerated.Extensions;
 using AssetRipper.SourceGenerated.Subclasses.SecondarySpriteTexture;
 using AssetRipper.SourceGenerated.Subclasses.SpriteAtlasData;
 using AssetRipper.SourceGenerated.Subclasses.SpriteRenderData;
+using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 
@@ -50,15 +51,15 @@ namespace AssetRipper.Processing.Textures
 					}
 				}
 			}
+			
 			ProcessedAssetCollection processedCollection = gameBundle.AddNewProcessedCollection("Sprite Atlas Slice", projectVersion);
-
 			foreach (IUnityObjectBase asset in gameBundle.FetchAssets())
 			{
 				if (asset is ITexture2D texture2D)
 				{
 					if (texture2D.SpriteInformation is { Count: > 1 })
 					{
-
+			
 						foreach (KeyValuePair<ISprite,ISpriteAtlas?> kv in texture2D.SpriteInformation)
 						{
 							ISpriteAtlas? spriteAtlas = kv.Value;
@@ -67,11 +68,17 @@ namespace AssetRipper.Processing.Textures
 							{
 								continue;
 							}
-
-
+			
+			
 							ISprite sliceSprite = processedCollection.CreateAsset(213, SpriteFactory.CreateAsset);
 							sliceSprite.CopyValues(sprite);
-
+			
+							// ReSharper disable once SuspiciousTypeConversion.Global
+							UnityObjectBase obj = (UnityObjectBase)sprite;
+							Debug.Assert(obj.ReplaceAsset is null);
+							
+							obj.ReplaceAsset = sliceSprite;
+			
 							var sliceTexture2D = processedCollection.CreateAsset(28,
 								info => new Texture2DWrapper(Texture2DFactory.CreateAsset(info)));
 							sliceTexture2D.Rect_C213 = sprite.Rect_C213;

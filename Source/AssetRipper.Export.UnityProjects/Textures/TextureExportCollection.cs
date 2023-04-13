@@ -36,6 +36,10 @@ namespace AssetRipper.Export.UnityProjects.Textures
 
 		public static IExportCollection CreateExportCollection(TextureAssetExporter assetExporter, ISprite asset)
 		{
+			if (asset.Collection.Name == "Sprite Atlas Slice")
+			{
+				return new SkipExportCollection(assetExporter, asset);
+			}
 			if (asset.RD_C213.Texture.TryGetAsset(asset.Collection, out ITexture2D? texture))
 			{
 				return new TextureExportCollection(assetExporter, texture, true);
