@@ -33,7 +33,7 @@ namespace AssetRipper.Export.UnityProjects.Scripts
 				}
 
 
-				List<(string Guid, string ReplaceGuid)> guids = new();
+				List<(string NewGuid, string OldGuid)> guids = new();
 
 				foreach (KeyValuePair<string, List<string>> entry in filesByName.Where(kv => kv.Value.Count > 1))
 				{
@@ -74,11 +74,11 @@ namespace AssetRipper.Export.UnityProjects.Scripts
 
 							if (resFiles.Count > 1)
 							{
-								ReadMeta(resFiles[0], out string guid);
+								ReadMeta(resFiles[0], out string newGuid);
 
 								foreach (string resFile in resFiles.Skip(1))
 								{
-									JObject meta = ReadMeta(resFile, out string replaceGuid);
+									JObject meta = ReadMeta(resFile, out string oldGuid);
 									string? assetBundleName = meta.SelectToken(".NativeFormatImporter.assetBundleName")
 										?.Value<string>();
 									if (!string.IsNullOrEmpty(assetBundleName)) // ab里面的资源有可能会被动态加载,暂时忽略吧
@@ -86,8 +86,8 @@ namespace AssetRipper.Export.UnityProjects.Scripts
 										continue;
 									}
 
-									guids.Add((guid, replaceGuid));
-									Logger.Info($"delete: {resFile} GUID {replaceGuid} -> {guid}");
+									guids.Add((newGuid, oldGuid));
+									Logger.Info($"delete: {resFile} GUID {oldGuid} -> {newGuid}");
 
 									File.Delete(resFile);
 									File.Delete(resFile + ".meta");
@@ -116,7 +116,7 @@ namespace AssetRipper.Export.UnityProjects.Scripts
 			}
 		}
 
-		private static int ReplaceGuids(string root, List<(string Guid, string ReplaceGuid)> guids)
+		private static int ReplaceGuids(string root, List<(string NewGuid, string OldGuid)> guids)
 		{
 			int count = 0;
 
@@ -139,9 +139,9 @@ namespace AssetRipper.Export.UnityProjects.Scripts
 				string content = File.ReadAllText(resFile);
 				bool change = false;
 
-				foreach ((string Guid, string ReplaceGuid) tuple in guids)
+				foreach ((string NewGuid, string OldGuid) tuple in guids)
 				{
-					string newContent = content.Replace(tuple.ReplaceGuid, tuple.Guid);
+					string newContent = content.Replace(tuple.OldGuid, tuple.NewGuid);
 
 					if (!ReferenceEquals(content, newContent))
 					{
