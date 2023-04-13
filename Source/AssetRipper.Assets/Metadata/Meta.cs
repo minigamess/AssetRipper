@@ -60,7 +60,11 @@ namespace AssetRipper.Assets.Metadata
 		public bool HasLicenseData { get; }
 		public IUnityObjectBase Importer { get; }
 
-		private static long CurrentTick => (DateTime.Now.Ticks - 0x089f7ff5f7b58000) / 10000000;
+		// private static long CurrentTick => (DateTime.Now.Ticks - 0x089f7ff5f7b58000) / 10000000;
+		/// <summary>
+		/// 相同的时间,便于后面资源去重
+		/// </summary>
+		private static long CurrentTick = (DateTime.Now.Ticks - 0x089f7ff5f7b58000) / 10000000;
 
 		public const string FileFormatVersionName = "fileFormatVersion";
 		public const string GuidName = "guid";
