@@ -257,6 +257,10 @@ namespace AssetRipper.Export.UnityProjects.Project
 			for (int i = 0; i < collections.Count; i++)
 			{
 				IExportCollection collection = collections[i];
+				if (collection is IgnoreExportCollection)
+				{
+					continue;
+				}
 				container.CurrentCollection = collection;
 				bool isExported = collection.Export(container, options.ProjectRootPath);
 				if (isExported)
