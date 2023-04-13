@@ -3,6 +3,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.Versioning;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace AssetRipper.Export.UnityProjects.Utils
 {
@@ -163,12 +164,31 @@ namespace AssetRipper.Export.UnityProjects.Utils
 		[SupportedOSPlatform("windows")]
 		private Bitmap ToSystemBitmap()
 		{
-			return new Bitmap(Width, Height * Depth, Stride, PixelFormat.Format32bppArgb, m_bitsHandle.AddrOfPinnedObject());
+			Bitmap bitmap = new Bitmap(Width, Height * Depth, Stride, PixelFormat.Format32bppArgb, m_bitsHandle.AddrOfPinnedObject());
+			if (Rect_C213 != null)
+			{
+				Rectangle rect = new Rectangle((int)Rect_C213.X, Height - (int)Rect_C213.Y - (int)Rect_C213.Height,
+					(int)Rect_C213.Width, (int)Rect_C213.Height);
+				bitmap = bitmap.Clone(rect, PixelFormat.Format32bppArgb);
+			}
+			return bitmap;
 		}
 
 		private Image<Bgra32> ToImageSharp()
 		{
-			return SixLabors.ImageSharp.Image.LoadPixelData<Bgra32>(Bits, Width, Height * Depth);
+			Image<Bgra32> image = SixLabors.ImageSharp.Image.LoadPixelData<Bgra32>(Bits, Width, Height * Depth);
+
+			if (Rect_C213 != null)
+			{
+				image = image.Clone(ctx =>
+				{
+					var rect = new SixLabors.ImageSharp.Rectangle((int)Rect_C213.X, Height - (int)Rect_C213.Y - (int)Rect_C213.Height,
+						(int)Rect_C213.Width, (int)Rect_C213.Height);
+					ctx.Crop(rect);
+				});
+			}
+
+			return image;
 		}
 	}
 }

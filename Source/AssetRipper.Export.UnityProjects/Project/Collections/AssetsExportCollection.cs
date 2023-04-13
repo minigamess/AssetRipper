@@ -25,6 +25,7 @@ namespace AssetRipper.Export.UnityProjects.Project.Collections
 			{
 				return base.GetExportID(asset);
 			}
+
 			return m_exportIDs[asset];
 		}
 

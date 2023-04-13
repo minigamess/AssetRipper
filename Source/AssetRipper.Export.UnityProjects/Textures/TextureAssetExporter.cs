@@ -2,10 +2,10 @@ using AssetRipper.Assets;
 using AssetRipper.Assets.Collections;
 using AssetRipper.Assets.Export;
 using AssetRipper.Export.UnityProjects.Configuration;
-using AssetRipper.Export.UnityProjects.Project.Collections;
 using AssetRipper.Export.UnityProjects.Project.Exporters;
 using AssetRipper.Export.UnityProjects.Utils;
 using AssetRipper.Import.Logging;
+using AssetRipper.Processing.Textures;
 using AssetRipper.SourceGenerated.Classes.ClassID_213;
 using AssetRipper.SourceGenerated.Classes.ClassID_28;
 using AssetRipper.SourceGenerated.Extensions;
@@ -54,6 +54,12 @@ namespace AssetRipper.Export.UnityProjects.Textures
 				Logger.Log(LogType.Warning, LogCategory.Export, $"Unable to convert '{texture.NameString}' to bitmap");
 				return false;
 			}
+
+			if (texture is Texture2DWrapper wrapper)
+			{
+				bitmap.Rect_C213 = wrapper.Rect_C213;
+			}
+			
 			return bitmap.Save(path, ImageExportFormat);
 		}
 	}

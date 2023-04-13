@@ -1,4 +1,5 @@
 using AssetRipper.Export.UnityProjects.Configuration;
+using AssetRipper.SourceGenerated.Subclasses.Rectf;
 using AssetRipper.TextureDecoder.Rgb.Formats;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -17,6 +18,8 @@ namespace AssetRipper.Export.UnityProjects.Utils
 
 		private readonly GCHandle m_bitsHandle;
 		private bool m_disposed;
+		public Rectf? Rect_C213;
+
 		/// <summary>
 		/// The byte size of each pixel.
 		/// </summary>

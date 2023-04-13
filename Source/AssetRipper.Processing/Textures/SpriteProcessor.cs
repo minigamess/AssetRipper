@@ -1,6 +1,7 @@
 ﻿using AssetRipper.Assets;
 using AssetRipper.Assets.Bundles;
 using AssetRipper.Assets.Cloning;
+using AssetRipper.Assets.Collections;
 using AssetRipper.Assets.Metadata;
 using AssetRipper.SourceGenerated.Classes.ClassID_213;
 using AssetRipper.SourceGenerated.Classes.ClassID_28;
@@ -45,6 +46,44 @@ namespace AssetRipper.Processing.Textures
 								texture.SpriteInformation ??= new();
 								AddToDictionary(packedSprite, atlas, texture.SpriteInformation);
 							}
+						}
+					}
+				}
+			}
+			ProcessedAssetCollection processedCollection = gameBundle.AddNewProcessedCollection("Sprite Atlas Slice", projectVersion);
+
+			foreach (IUnityObjectBase asset in gameBundle.FetchAssets())
+			{
+				if (asset is ITexture2D texture2D)
+				{
+					if (texture2D.SpriteInformation is { Count: > 1 })
+					{
+
+						foreach (KeyValuePair<ISprite,ISpriteAtlas?> kv in texture2D.SpriteInformation)
+						{
+							ISpriteAtlas? spriteAtlas = kv.Value;
+							ISprite sprite = kv.Key;
+							if (spriteAtlas is null)
+							{
+								continue;
+							}
+
+
+							ISprite sliceSprite = processedCollection.CreateAsset(213, SpriteFactory.CreateAsset);
+							sliceSprite.CopyValues(sprite);
+
+							var sliceTexture2D = processedCollection.CreateAsset(28,
+								info => new Texture2DWrapper(Texture2DFactory.CreateAsset(info)));
+							sliceTexture2D.Rect_C213 = sprite.Rect_C213;
+							
+							sliceTexture2D.CopyValues(texture2D);
+							
+							sliceTexture2D.NameString = sprite.NameString;
+							sliceTexture2D.OriginalDirectory = "Assets/SpriteSlice/" + spriteAtlas.NameString;
+							sliceTexture2D.OriginalName = sprite.NameString;
+							
+							sliceTexture2D.SpriteInformation = new ();
+							sliceTexture2D.SpriteInformation.Add(sliceSprite, null);
 						}
 					}
 				}
